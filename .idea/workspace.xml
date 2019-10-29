@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="13cf6f0c-3d08-4da3-acec-fb255b4e300f" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1R138QFmPHiObAhQRbjl0iiLT8w" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\23876\Desktop\cpu_mem\static" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="13cf6f0c-3d08-4da3-acec-fb255b4e300f" name="Default Changelist" comment="" />
+      <created>1568820614140</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1568820614140</updated>
+      <workItem from="1568820615899" duration="180000" />
+      <workItem from="1568820822189" duration="16000" />
+      <workItem from="1568820909018" duration="1086000" />
+      <workItem from="1568853751275" duration="11359000" />
+      <workItem from="1568871651307" duration="20000" />
+      <workItem from="1568898305927" duration="5434000" />
+      <workItem from="1568941517985" duration="42000" />
+      <workItem from="1568968950785" duration="359000" />
+      <workItem from="1569079617347" duration="573000" />
+      <workItem from="1569113702903" duration="20000" />
+      <workItem from="1569229846321" duration="1089000" />
+      <workItem from="1569235224031" duration="1539000" />
+      <workItem from="1569937729184" duration="299000" />
+      <workItem from="1569938120199" duration="147000" />
+      <workItem from="1569983346410" duration="103000" />
+      <workItem from="1570077098706" duration="325000" />
+      <workItem from="1571039776137" duration="1632000" />
+      <workItem from="1571047997203" duration="51000" />
+      <workItem from="1571066516742" duration="1319000" />
+      <workItem from="1571113530215" duration="862000" />
+      <workItem from="1572073638981" duration="837000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实时显示CPU&内存&随机数</title>
+</head>
+<style>
+    *{
+        margin:0;
+        padding: 0;
+    }
+    #container{
+        margin-top:50px;
+        margin-left: 100px;
+    }
+    #main{
+        width: 880px;
+        height:400px;
+        border:2px solid #117DBB;
+        overflow: hidden;
+        float: left;
+        margin-left: 20px;
+        margin-top:80px;
+    }
+    #canvas{
+        background: #FFF;
+    }
+    #sider{
+        width:250px;
+        height:500px;
+        float:left;
+        border-right:2px solid #EEE;
+    }
+    #sider ul li{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    #sider ul li a{
+        display: block;
+        width:90%;
+        height:80px;
+        padding: 0;
+        margin-top:10px;
+        border-radius: 10px;
+    }
+    #sider ul li a:hover{
+        cursor: pointer;
+        background:#E5F3FB;
+    }
+    #percent{
+        float:left;
+        margin-top:100px;
+    }
+    #percent{
+        margin-left: 15px;
+    }
+    #percent ul li{
+        list-style: none;
+        text-align: left;
+        font-size:18px;
+        line-height: 40px;
+    }
+    .detail{
+        width:500px;
+        height:80px;
+        position: absolute;
+        left:370px;
+        top:50px;
+    }
+    #cpudetail{
+    }
+    #memdetail{
+        display: none;
+    }
+    #randetail{
+        display: none;
+    }
+    #randetail p{
+        font-size:22px;
+        margin-top:20px;
+    }
+    #randetail p span{
+        font-size:20px;
+        color:gray;
+    }
+    #cpudetail p span{
+        font-size: 23px;
+    }
+    #cpudetail .perc{
+        font-size:18px;
+        color: #333;
+        display: block;
+        margin-top:20px;
+    }
+    #memdetail p{
+        font-size: 20px;
+    }
+    #memdetail p span{
+        font-size: 18px;
+        color:gray;
+        text-align: right;
+    }
+</style>
+<script src="http://localhost:8080/vue.min.js"></script>
+<script src="http://localhost:8080/jQuery.js"></script>
+<body>
+<div id="container">
+<div id="sider">
+    <ul>
+        <li><a @click="cpu" id="side1">CPU:{{CPU}}%</a></li>
+        <li><a @click="memory" id="side2">内存:{{MEMORY}}%</a></li>
+        <li><a @click="random" id="side3">随机数:{{RANDOM}}</a></li>
+    </ul>
+</div>
+<div id="cpudetail" class="detail">
+    <p><span>CPU </span>{{cpuModel}}</p>
+    <p class="perc">%利用率</p>
+</div>
+<div id="memdetail" class="detail">
+    <p>内存 <span>{{totalMem}}GB</span></p>
+    <p style="display: block;margin-top:20px;">使用量 <span>{{useMem}}GB</span></p>
+</div>
+<div id="randetail" class="detail">
+    <p>随机数 <span>{{RANDOM}}</span></p>
+</div>
+<div id="main">
+<canvas id="canvas" width="45000" height="400" style="display: block">您的浏览器暂不支持canvas</canvas>
+<canvas id="canvas1" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
+<canvas id="canvas2" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
+</div>
+    <div id="percent">
+        <ul>
+            <li>90%</li>
+            <li>80%</li>
+            <li>70%</li>
+            <li>60%</li>
+            <li>50%</li>
+            <li>40%</li>
+            <li>30%</li>
+            <li>20%</li>
+            <li>10%</li>
+            <li>0%</li>
+        </ul>
+    </div>
+    </div>
+</div>
+
+</body>
+<script>
+    var len1=0;
+    var len2=0;
+    var len3=0;
+    var side1=document.getElementById('side1');
+    var side2=document.getElementById('side2');
+    var side3=document.getElementById('side3')
+    var drawing=document.getElementById('canvas');
+    var drawing1=document.getElementById('canvas1');
+    var drawing2=document.getElementById('canvas2');
+    side1.style.background='#50BDEB';
+    var app=new Vue({
+        el:'#container',
+        data:{
+            CPU:0,
+            MEMORY:0,
+            RANDOM:0,
+            cpuModel:'',
+            totalMem:0,
+            useMem:0,
+        },
+        methods:{
+            cpu:function(){
+                document.getElementById('main').style.borderColor=cpuColor.borderColor;
+                document.getElementById('cpudetail').style.display='block';
+                document.getElementById('memdetail').style.display='none';
+                document.getElementById('randetail').style.display='none';
+                document.getElementById('side1').style.background='#50BDEB';
+                document.getElementById('side2').style.background='white';
+                document.getElementById('side3').style.background='white';
+                drawing.style.display='block';
+                drawing1.style.display='none';
+                drawing2.style.display='none';
+                drawing.style.marginLeft=len1+'px';
+                drawing1.style.marginLeft=len2+'px';
+                drawing2.style.marginLeft=len3+'px';
+            },
+            memory:function(){
+                document.getElementById('main').style.borderColor=memColor.borderColor;
+                document.getElementById('cpudetail').style.display='none';
+                document.getElementById('memdetail').style.display='block';
+                document.getElementById('randetail').style.display='none';
+                document.getElementById('side1').style.background='white';
+                document.getElementById('side2').style.background='#50BDEB';
+                document.getElementById('side3').style.background='white';
+                drawing.style.display='none';
+                drawing1.style.display='block';
+                drawing2.style.display='none';
+                drawing.style.marginLeft=len1+'px';
+                drawing1.style.marginLeft=len2+'px';
+                drawing2.style.marginLeft=len3+'px';
+                // alert(side2.style.background)
+            },
+            random:function(){
+                document.getElementById('main').style.borderColor=ranColor.borderColor;
+                document.getElementById('cpudetail').style.display='none';
+                document.getElementById('memdetail').style.display='none';
+                document.getElementById('randetail').style.display='block';
+                document.getElementById('side1').style.background='white';
+                document.getElementById('side2').style.background='white';
+                document.getElementById('side3').style.background='#50BDEB';
+                drawing.style.display='none';
+                drawing1.style.display='none';
+                drawing2.style.display='block';
+                drawing.style.marginLeft=len1+'px';
+                drawing1.style.marginLeft=len2+'px';
+                drawing2.style.marginLeft=len3+'px';
+            }
+        }
+    })
+
+    var drawing=document.getElementById('canvas');
+    var drawing1=document.getElementById('canvas1');
+    var drawing2=document.getElementById('canvas2');
+    var cpuColor={
+        borderColor:"#8B12AE",
+        curveColor:"#9528B4",
+        lineColor:"#ECDEF0",
+        fillColor:"#F4F2F4"
+        // fillColor:rgba(244,242,244,0.5)
+    }
+
+    var memColor={
+        borderColor:"#117DBB",
+        curveColor:"#117DBB",
+        lineColor:"#D9EAF4",
+        fillColor:"#F1F6FA",
+        // fillColor:"rgba(241,246,250,0.5)"
+    }
+
+    var ranColor={
+        borderColor:"#A74F01",
+        curveColor:"#A74F01",
+        lineColor:"#EEDECF",
+        fillColor:"#FCF3EB",
+    }
+    var context;
+    var context1;
+    var context2;
+    function DrawCanvas() {
+        document.getElementById('main').style.borderColor=cpuColor.borderColor
+        if (drawing.getContext) {
+            context = drawing.getContext('2d')
+            context.strokeStyle = cpuColor.lineColor;
+            context.beginPath();
+            for (let i = 0; ; i++) {
+                context.moveTo(0, 40 + 40 * i)
+                if (40 + 40 * i >= 450)
+                    break;
+                context.lineTo(45000, 40 + 40 * i)
+            }
+            for (let i = 0; ; i++) {
+                context.moveTo(80 + 80 * i, 0)
+                if (80 + 80 * i >= 45000)
+                    break;
+                context.lineTo(80 + 80 * i, 400)
+            }
+            context.stroke()
+        }
+        if (drawing1.getContext) {
+            context1 = drawing1.getContext('2d')
+            context1.strokeStyle = memColor.lineColor;
+            context1.beginPath();
+            for (let i = 0; ; i++) {
+                context1.moveTo(0, 40 + 40 * i)
+                if (40 + 40 * i >= 450)
+                    break;
+                context1.lineTo(45000, 40 + 40 * i)
+            }
+            for (let i = 0; ; i++) {
+                context1.moveTo(80 + 80 * i, 0)
+                if (80 + 80 * i >= 45000)
+                    break;
+                context1.lineTo(80 + 80 * i, 400)
+            }
+            context1.stroke()
+        }
+        if (drawing2.getContext) {
+            context2 = drawing2.getContext('2d')
+            context2.strokeStyle = ranColor.lineColor;
+            context2.beginPath();
+            for (let i = 0; ; i++) {
+                context2.moveTo(0, 40 + 40 * i)
+                if (40 + 40 * i >= 450)
+                    break;
+                context2.lineTo(45000, 40 + 40 * i)
+            }
+            for (let i = 0; ; i++) {
+                context2.moveTo(80 + 80 * i, 0)
+                if (80 + 80 * i >= 45000)
+                    break;
+                context2.lineTo(80 + 80 * i, 400)
+            }
+            context2.stroke()
+        }
+    }
+    DrawCanvas();
+    var timer={};
+    function DrawLine() {
+        var x, y;
+        x = -10;
+        y = 400;
+        x1 = x;
+        y1 = y;
+        x2 = x;
+        y2 = y;
+        timer.time = setInterval(function () {
+            $.ajax({
+                url: '/getcpu',
+                type: 'get',
+                success: function (res) {
+                    app.CPU = (res.cpu * 100).toFixed(1);
+                    app.MEMORY = (100-(res.memory * 100)).toFixed(1);
+                    app.cpuModel=res.cpus[0].model;
+                    app.totalMem=(res.totalmem/1024/1024/1024).toFixed(2);
+                    app.useMem=((res.totalmem-res.freemem)/1024/1024/1024).toFixed(2);
+                    app.RANDOM=Math.random().toFixed(2);
+                    context.strokeStyle = cpuColor.fillColor
+                    context.strokeWidth = 2;
+                    context.beginPath();
+                    context.moveTo(x, y);
+                    var tempX = x;
+                    var tempY = y;
+                    x += 10;
+                    if(x>=660){
+                        drawing.style.marginLeft=drawing.offsetLeft-374-10+'px';
+                        len1=len1-10;
+                    }
+                    let percentage=0;
+                    percentage=app.CPU/100
+                    y = 400 - 400 * percentage;
+                    if (x === 0){
+                        context.moveTo(x, y);
+                    }
+                    context.lineTo(x, y)
+                    context.lineTo(x, 400)
+                    context.lineTo(x - 10, 400)
+                    context.lineTo(x - 10, tempY)
+                    context.fillStyle = cpuColor.fillColor
+                    context.fill();
+                    context.stroke();
+                    context.beginPath();
+                    context.strokeStyle = cpuColor.curveColor;
+                    context.moveTo(tempX, tempY)
+                    context.lineTo(x, y)
+                    context.stroke();
+
+                    context1.strokeStyle = memColor.fillColor;
+                    context1.strokeWidth = 0;
+                    context1.beginPath();
+                    context1.moveTo(x1, y1);
+                    var tempX1 = x1;
+                    var tempY1 = y1;
+                    x1 += 10;
+                    if(x1>=660){
+                        drawing1.style.marginLeft=drawing1.offsetLeft-374-10+'px';
+                        len2=len2-10;
+                    }
+                    let percentage1=0;
+                    percentage1=app.MEMORY/100
+                    y1 = 400 - 400 * percentage1;
+                    if (x1 === 0){
+                        context.moveTo(x1, y1);
+                    }
+                    context1.lineTo(x1, y1)
+                    context1.lineTo(x1, 400)
+                    context1.lineTo(x1 - 10, 400)
+                    context1.lineTo(x1 - 10, tempY1)
+                    context1.fillStyle = memColor.fillColor;
+                    context1.fill();
+                    context1.stroke();
+                    context1.beginPath();
+                    context1.strokeStyle = memColor.curveColor;//绘制曲线
+                    context1.moveTo(tempX1, tempY1)
+                    context1.lineTo(x1, y1)
+                    context1.stroke();
+                    context2.strokeStyle = ranColor.fillColor;
+                    context2.strokeWidth = 0;
+                    context2.beginPath();
+                    context2.moveTo(x2, y2);
+                    var tempX2 = x2;
+                    var tempY2 = y2;
+                    x2 += 10;
+                    if(x2>=660){
+                        drawing2.style.marginLeft=drawing2.offsetLeft-374-10+'px'
+                        len3=len3-10;
+                    }
+                    let percentage2=0;
+                    percentage2=app.RANDOM;
+                    y2 = 400 - 400 * percentage2;
+                    if (x2 === 0){
+                        context2.moveTo(x2, y2);
+                    }
+                    context2.lineTo(x2, y2)
+                    context2.lineTo(x2, 400)
+                    context2.lineTo(x2 - 10, 400)
+                    context2.lineTo(x2 - 10, tempY2)
+                    context2.fillStyle = ranColor.fillColor;
+                    context2.fill();
+                    context2.stroke();
+                    context2.beginPath();
+                    context2.strokeStyle = ranColor.curveColor;//绘制曲线
+                    context2.moveTo(tempX2, tempY2)
+                    context2.lineTo(x2, y2)
+                    context2.stroke();
+                },
+                failed: function (err) {
+                    console.log("error" + err);
+                }
+            })
+        }, 1000)
+        context.stroke();
+        context1.stroke();
+        context2.stroke();
+    }
+    DrawLine();
+</script>
+</html>
