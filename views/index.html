@@ -14,7 +14,7 @@
         margin-left: 100px;
     }
     #main{
-        width: 880px;
+        width: 600px;
         height:400px;
         border:2px solid #117DBB;
         overflow: hidden;
@@ -24,6 +24,15 @@
     }
     #canvas{
         background: #FFF;
+        transition:1s linear;
+    }
+    #canvas1{
+        background: #FFF;
+        transition:1s linear;
+    }
+    #canvas2{
+        background: #FFF;
+        transition:1s linear;
     }
     #sider{
         width:250px;
@@ -35,6 +44,10 @@
         list-style: none;
         margin: 0;
         padding: 0;
+        line-height:80px;
+        font-size: 20px;
+        text-align: center;
+
     }
     #sider ul li a{
         display: block;
@@ -43,6 +56,7 @@
         padding: 0;
         margin-top:10px;
         border-radius: 10px;
+        border:2px solid #DDD;
     }
     #sider ul li a:hover{
         cursor: pointer;
@@ -60,6 +74,23 @@
         text-align: left;
         font-size:18px;
         line-height: 40px;
+    }
+    #displayPercent{
+        height:400px;
+        width:100px;
+        float: left;
+        margin-left: 20px;
+        margin-top:80px;
+        border:2px solid #DDD;
+        position: relative;
+    }
+    #percentDiv{
+        position: absolute;
+        bottom:0;
+        width:100%;
+        height:50%;
+        background: #8B12AE;
+        transition:1s linear height;
     }
     .detail{
         width:500px;
@@ -108,7 +139,9 @@
 <div id="container">
 <div id="sider">
     <ul>
-        <li><a @click="cpu" id="side1">CPU:{{CPU}}%</a></li>
+        <li>
+            <a @click="cpu" id="side1">CPU:{{CPU}}%</a>
+        </li>
         <li><a @click="memory" id="side2">内存:{{MEMORY}}%</a></li>
         <li><a @click="random" id="side3">随机数:{{RANDOM}}</a></li>
     </ul>
@@ -142,12 +175,18 @@
             <li>10%</li>
             <li>0%</li>
         </ul>
+
+    </div>
+    <div id="displayPercent">
+        <div :style="'height:'+Data+'%'" id="percentDiv"></div>
     </div>
     </div>
 </div>
 
 </body>
 <script>
+    window.resizeTo(800,600)
+    let flag=0;
     var len1=0;
     var len2=0;
     var len3=0;
@@ -167,6 +206,7 @@
             cpuModel:'',
             totalMem:0,
             useMem:0,
+            Data:0,
         },
         methods:{
             cpu:function(){
@@ -175,6 +215,7 @@
                 document.getElementById('memdetail').style.display='none';
                 document.getElementById('randetail').style.display='none';
                 document.getElementById('side1').style.background='#50BDEB';
+                document.getElementById("percentDiv").style.background=cpuColor.borderColor;
                 document.getElementById('side2').style.background='white';
                 document.getElementById('side3').style.background='white';
                 drawing.style.display='block';
@@ -183,6 +224,7 @@
                 drawing.style.marginLeft=len1+'px';
                 drawing1.style.marginLeft=len2+'px';
                 drawing2.style.marginLeft=len3+'px';
+                flag=0;
             },
             memory:function(){
                 document.getElementById('main').style.borderColor=memColor.borderColor;
@@ -192,12 +234,14 @@
                 document.getElementById('side1').style.background='white';
                 document.getElementById('side2').style.background='#50BDEB';
                 document.getElementById('side3').style.background='white';
+                document.getElementById("percentDiv").style.background=memColor.borderColor;
                 drawing.style.display='none';
                 drawing1.style.display='block';
                 drawing2.style.display='none';
                 drawing.style.marginLeft=len1+'px';
                 drawing1.style.marginLeft=len2+'px';
                 drawing2.style.marginLeft=len3+'px';
+                flag=1;
                 // alert(side2.style.background)
             },
             random:function(){
@@ -208,12 +252,14 @@
                 document.getElementById('side1').style.background='white';
                 document.getElementById('side2').style.background='white';
                 document.getElementById('side3').style.background='#50BDEB';
+                document.getElementById("percentDiv").style.background=ranColor.borderColor;
                 drawing.style.display='none';
                 drawing1.style.display='none';
                 drawing2.style.display='block';
                 drawing.style.marginLeft=len1+'px';
                 drawing1.style.marginLeft=len2+'px';
                 drawing2.style.marginLeft=len3+'px';
+                flag=2;
             }
         }
     })
@@ -324,6 +370,13 @@
                     app.totalMem=(res.totalmem/1024/1024/1024).toFixed(2);
                     app.useMem=((res.totalmem-res.freemem)/1024/1024/1024).toFixed(2);
                     app.RANDOM=Math.random().toFixed(2);
+                    if(flag==0){
+                        app.Data=app.CPU;
+                    }else if(flag==1){
+                        app.Data=app.MEMORY;
+                    }else{
+                        app.Data=app.RANDOM*100;
+                    }
                     context.strokeStyle = cpuColor.fillColor
                     context.strokeWidth = 2;
                     context.beginPath();
@@ -331,7 +384,7 @@
                     var tempX = x;
                     var tempY = y;
                     x += 10;
-                    if(x>=660){
+                    if(x>=520){
                         drawing.style.marginLeft=drawing.offsetLeft-374-10+'px';
                         len1=len1-10;
                     }
@@ -361,7 +414,7 @@
                     var tempX1 = x1;
                     var tempY1 = y1;
                     x1 += 10;
-                    if(x1>=660){
+                    if(x1>=520){
                         drawing1.style.marginLeft=drawing1.offsetLeft-374-10+'px';
                         len2=len2-10;
                     }
@@ -390,7 +443,7 @@
                     var tempX2 = x2;
                     var tempY2 = y2;
                     x2 += 10;
-                    if(x2>=660){
+                    if(x2>=520){
                         drawing2.style.marginLeft=drawing2.offsetLeft-374-10+'px'
                         len3=len3-10;
                     }
