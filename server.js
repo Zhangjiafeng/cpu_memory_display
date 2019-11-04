@@ -4,8 +4,9 @@ const bodyParser=require('body-parser');
 const common=require('./libs/common.js');
 const osUtils=require('os-utils')
 const os=require('os')
+const fs=require('fs')
 var server=express();
-server.listen(8080);
+server.listen(8005);
 
 //获取请求数据
 server.use(bodyParser.urlencoded({extended:false}));
@@ -20,9 +21,17 @@ server.use('/getcpu',(req,res)=>{
     data.cpus=os.cpus();
     data.freemem=os.freemem();
     data.totalmem=os.totalmem();
+    data.ran=Math.random().toFixed(2);
+
     osUtils.cpuUsage(function(cpu){
         data.cpu=cpu;
-        res.send(data)
+        let str=(cpu*100).toFixed(1).toString()+"%   "+(100-(data.memory * 100)).toFixed(1).toString()+"%   "+data.ran.toString()+'\n';
+        fs.writeFile('./static/log.txt',str,{'flag':'a'},function(err){
+            if(err){
+                throw err;
+            }
+            res.send(data)
+        })
 
     })
 })

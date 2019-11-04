@@ -22,7 +22,7 @@
         overflow: hidden;
         float: left;
         margin-left: 20px;
-        margin-top:80px;
+        margin-top:115px;
     }
     #canvas{
         background: #FFF;
@@ -35,9 +35,9 @@
     }
     #sider{
         width:250px;
-        height:500px;
+        height:560px;
         float:left;
-        border-right:2px solid #EEE;
+        border-right:2px solid #DDD;
     }
     #sider ul li{
         list-style: none;
@@ -79,7 +79,7 @@
         width:100px;
         float: left;
         margin-left: 20px;
-        margin-top:80px;
+        margin-top:115px;
         border:2px solid #DDD;
         position: relative;
     }
@@ -96,7 +96,7 @@
         height:80px;
         position: absolute;
         left:370px;
-        top:50px;
+        top:60px;
     }
     #cpudetail{
     }
@@ -131,36 +131,81 @@
         color:gray;
         text-align: right;
     }
+    #head{
+        width:100%;
+        height:270px;
+        background: #117DBB;
+    }
+    #picker1{
+        position: absolute;
+        top:370px;
+        left:100px;
+    }
 </style>
-<script src="http://localhost:8080/vue.min.js"></script>
-<script src="http://localhost:8080/jQuery.js"></script>
+<script src="http://localhost:8005/js/vue.min.js"></script>
+<script src="http://localhost:8005/js/jQuery.js"></script>
+<script src="http://localhost:8005/js/colpick.js" type="text/javascript"></script>
+<script src="http://localhost:8005/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://localhost:8005/css/colpick.css" type="text/css"/>
+<link rel="stylesheet" href="http://localhost:8005/css/bootstrap.min.css">
 <body>
+
+<div data-keyboard="false" data-backdrop="static" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabel">选择边框样式</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon" id="sizing-addon1">输入网格纵线间隔</span>
+                    <input type="number" id="height" class="form-control" placeholder="80" aria-describedby="sizing-addon1">
+                </div><br>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon" id="sizing-addon2">输入网格横线间隔</span>
+                    <input type="number" id="width" class="form-control" placeholder="40(20的倍数最佳)" aria-describedby="sizing-addon1">
+                </div><br>
+                <p style="font-size: 18px;font-color:#DDD;">选择网格颜色（不选择则使用默认颜色）:</p>
+                <div style="margin:15px auto;" id="picker2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="loadPage()">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<button style="display: none" id="modelControl" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    开始演示模态框
+</button>
+<div id="picker1"></div>
 <div id="container">
-<div id="sider">
-    <ul>
-        <li>
-            <a @click="cpu" id="side1">CPU:{{CPU}}%</a>
-        </li>
-        <li><a @click="memory" id="side2">内存:{{MEMORY}}%</a></li>
-        <li><a @click="random" id="side3">随机数:{{RANDOM}}</a></li>
-    </ul>
-</div>
-<div id="cpudetail" class="detail">
-    <p><span>CPU </span>{{cpuModel}}</p>
-    <p class="perc">%利用率</p>
-</div>
-<div id="memdetail" class="detail">
-    <p>内存 <span>{{totalMem}}GB</span></p>
-    <p style="display: block;margin-top:20px;">使用量 <span>{{useMem}}GB</span></p>
-</div>
-<div id="randetail" class="detail">
-    <p>随机数 <span>{{RANDOM}}</span></p>
-</div>
-<div id="main">
-<canvas id="canvas" width="45000" height="400" style="display: block">您的浏览器暂不支持canvas</canvas>
-<canvas id="canvas1" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
-<canvas id="canvas2" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
-</div>
+    <div id="sider">
+        <ul>
+            <li>
+                <a @click="cpu" id="side1">CPU:{{CPU}}%</a>
+            </li>
+            <li><a @click="memory" id="side2">内存:{{MEMORY}}%</a></li>
+            <li><a @click="random" id="side3">随机数:{{RANDOM}}</a></li>
+            <p style="font-size: 18px;margin-top:18px;">选择曲线以及柱状图颜色:</p>
+        </ul>
+    </div>
+    <div id="cpudetail" class="detail">
+        <p><span>CPU </span>{{cpuModel}}</p>
+        <p class="perc">%利用率</p>
+    </div>
+    <div id="memdetail" class="detail">
+        <p>内存 <span>{{totalMem}}GB</span></p>
+        <p style="display: block;margin-top:20px;">使用量 <span>{{useMem}}GB</span></p>
+    </div>
+    <div id="randetail" class="detail">
+        <p>随机数 <span>{{RANDOM}}</span></p>
+    </div>
+    <div id="main">
+        <canvas id="canvas" width="45000" height="400" style="display: block">您的浏览器暂不支持canvas</canvas>
+        <canvas id="canvas1" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
+        <canvas id="canvas2" width="45000" height="400" style="display: none">您的浏览器暂不支持canvas</canvas>
+    </div>
     <div id="percent">
         <ul>
             <li>90%</li>
@@ -184,8 +229,35 @@
 
 </body>
 <script>
-    window.moveTo(200,100);
-    window.resizeTo(800,600)
+
+    $('#modelControl').click();
+    $('#picker1').colpick({
+        flat:true,
+        layout:'hex',
+        submit:0,
+        onChange:function(hsb,hex,rgb,el,bySetColor){
+            document.getElementById("percentDiv").style.background="#"+hex;
+            if(flag==0){
+                cpuColor.curveColor="#"+hex;
+            }else if(flag==1){
+                memColor.curveColor="#"+hex;
+            }else if(flag==2){
+                ranColor.curveColor="#"+hex;
+            }
+        }
+    });
+
+    var color=null;
+    $('#picker2').colpick({
+        flat:true,
+        layout:'hex',
+        submit:0,
+        onChange:function(hsb,hex,rgb,el,bySetColor){
+            color="#"+hex;
+            console.log(color)
+        }
+    });
+
     let flag=0;
     var len1=0;
     var len2=0;
@@ -215,7 +287,7 @@
                 document.getElementById('memdetail').style.display='none';
                 document.getElementById('randetail').style.display='none';
                 document.getElementById('side1').style.background='#50BDEB';
-                document.getElementById("percentDiv").style.background=cpuColor.borderColor;
+                document.getElementById("percentDiv").style.background=cpuColor.curveColor;
                 document.getElementById('side2').style.background='white';
                 document.getElementById('side3').style.background='white';
                 drawing.style.display='block';
@@ -234,7 +306,7 @@
                 document.getElementById('side1').style.background='white';
                 document.getElementById('side2').style.background='#50BDEB';
                 document.getElementById('side3').style.background='white';
-                document.getElementById("percentDiv").style.background=memColor.borderColor;
+                document.getElementById("percentDiv").style.background=memColor.curveColor;
                 drawing.style.display='none';
                 drawing1.style.display='block';
                 drawing2.style.display='none';
@@ -252,7 +324,7 @@
                 document.getElementById('side1').style.background='white';
                 document.getElementById('side2').style.background='white';
                 document.getElementById('side3').style.background='#50BDEB';
-                document.getElementById("percentDiv").style.background=ranColor.borderColor;
+                document.getElementById("percentDiv").style.background=ranColor.curveColor;
                 drawing.style.display='none';
                 drawing1.style.display='none';
                 drawing2.style.display='block';
@@ -292,23 +364,25 @@
     var context;
     var context1;
     var context2;
-    function DrawCanvas() {
+    function DrawCanvas(width,height) {
+        width=Number(width);
+        height=Number(height);
         document.getElementById('main').style.borderColor=cpuColor.borderColor
         if (drawing.getContext) {
             context = drawing.getContext('2d')
             context.strokeStyle = cpuColor.lineColor;
             context.beginPath();
             for (let i = 0; ; i++) {
-                context.moveTo(0, 40 + 40 * i)
-                if (40 + 40 * i >= 450)
+                context.moveTo(0, width + width * i)
+                if (width + width * i >= 450)
                     break;
-                context.lineTo(45000, 40 + 40 * i)
+                context.lineTo(45000, width + width * i)
             }
             for (let i = 0; ; i++) {
-                context.moveTo(80 + 80 * i, 0)
-                if (80 + 80 * i >= 45000)
+                context.moveTo(height + height * i, 0)
+                if (height + height * i >= 45000)
                     break;
-                context.lineTo(80 + 80 * i, 400)
+                context.lineTo(height + height * i, 400)
             }
             context.stroke()
         }
@@ -317,16 +391,16 @@
             context1.strokeStyle = memColor.lineColor;
             context1.beginPath();
             for (let i = 0; ; i++) {
-                context1.moveTo(0, 40 + 40 * i)
-                if (40 + 40 * i >= 450)
+                context1.moveTo(0, width + width * i)
+                if (width + width * i >= 450)
                     break;
-                context1.lineTo(45000, 40 + 40 * i)
+                context1.lineTo(45000, width + width * i)
             }
             for (let i = 0; ; i++) {
-                context1.moveTo(80 + 80 * i, 0)
-                if (80 + 80 * i >= 45000)
+                context1.moveTo(height + height * i, 0)
+                if (height + height * i >= 45000)
                     break;
-                context1.lineTo(80 + 80 * i, 400)
+                context1.lineTo(height + height * i, 400)
             }
             context1.stroke()
         }
@@ -335,21 +409,21 @@
             context2.strokeStyle = ranColor.lineColor;
             context2.beginPath();
             for (let i = 0; ; i++) {
-                context2.moveTo(0, 40 + 40 * i)
-                if (40 + 40 * i >= 450)
+                context2.moveTo(0, width + width * i)
+                if (width + width * i >= 450)
                     break;
-                context2.lineTo(45000, 40 + 40 * i)
+                context2.lineTo(45000, width + width * i)
             }
             for (let i = 0; ; i++) {
-                context2.moveTo(80 + 80 * i, 0)
-                if (80 + 80 * i >= 45000)
+                context2.moveTo(height + height * i, 0)
+                if (height + height * i >= 45000)
                     break;
-                context2.lineTo(80 + 80 * i, 400)
+                context2.lineTo(height + height * i, 400)
             }
             context2.stroke()
         }
     }
-    DrawCanvas();
+
     var timer={};
     function DrawLine() {
         var x, y;
@@ -369,7 +443,7 @@
                     app.cpuModel=res.cpus[0].model;
                     app.totalMem=(res.totalmem/1024/1024/1024).toFixed(2);
                     app.useMem=((res.totalmem-res.freemem)/1024/1024/1024).toFixed(2);
-                    app.RANDOM=Math.random().toFixed(2);
+                    app.RANDOM=res.ran;
                     if(flag==0){
                         app.Data=app.CPU;
                     }else if(flag==1){
@@ -475,6 +549,31 @@
         context1.stroke();
         context2.stroke();
     }
-    DrawLine();
+    function loadPage(){
+        var width=document.getElementById('width').value;
+        var height=document.getElementById('height').value;
+        if(width==''&&height==''){
+            height=80;
+            width=40;
+        }
+        width=Number(width);
+        height=Number(height);
+        if(width<=10||height<=20){
+            alert('输入数值太小');
+            return;
+        }
+        if(color!=null){
+            cpuColor.borderColor=color;
+            cpuColor.lineColor=color;
+            memColor.borderColor=color;
+            memColor.lineColor=color;
+            ranColor.borderColor=color;
+            ranColor.lineColor=color;
+        }
+        DrawCanvas(width,height);
+        DrawLine();
+        $('#modelControl').click();
+    }
+
 </script>
 </html>
