@@ -25,16 +25,31 @@ server.use('/getcpu',(req,res)=>{
 
     osUtils.cpuUsage(function(cpu){
         data.cpu=cpu;
-        let str=(cpu*100).toFixed(1).toString()+"%   "+(100-(data.memory * 100)).toFixed(1).toString()+"%   "+data.ran.toString()+'\n';
-        fs.writeFile('./static/log.txt',str,{'flag':'a'},function(err){
+        let date=new Date();
+        // let str=(cpu*100).toFixed(1).toString()+"%   "+(100-(data.memory * 100)).toFixed(1).toString()+"%   "+data.ran.toString()+'\n';
+        let dateTime=date.getFullYear().toString()+'-'+(date.getMonth()+1).toString()+'-'+date.getDate().toString()+'|'+date.getHours().toString()+':'+date.getMinutes().toString()+':'+date.getSeconds().toString();
+        let str1=dateTime+"   "+(cpu*100).toFixed(1).toString()+'\n';
+        let str2=dateTime+"   "+(100-(data.memory * 100)).toFixed(1).toString()+'\n';
+        let str3=dateTime+'   '+data.ran.toString()+'\n';
+        fs.writeFile('./static/cpu.txt',str1,{'flag':'a'},function(err){
             if(err){
                 throw err;
             }
-            res.send(data)
+            fs.writeFile('./static/memory.txt',str2,{'flag':'a'},function(err){
+                if(err){
+                    throw err;
+                }
+                fs.writeFile('./static/random.txt',str3,{'flag':'a'},function(err){
+                    if(err){
+                        throw err;
+                    }
+                    res.send(data)
+                })
+            })
         })
 
     })
 })
 
 server.use(static('./static'));
-console.log('server running at port 8080.')
+console.log('server running at port 8005.')
