@@ -6,7 +6,7 @@ const osUtils=require('os-utils')
 const os=require('os')
 const fs=require('fs')
 var server=express();
-server.listen(8005);
+server.listen(8000);
 
 //获取请求数据
 server.use(bodyParser.urlencoded({extended:false}));
@@ -52,4 +52,4 @@ server.use('/getcpu',(req,res)=>{
 })
 
 server.use(static('./static'));
-console.log('server running at port 8005.')
+console.log('server running at port 8000.')
